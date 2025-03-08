@@ -1,0 +1,66 @@
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import classification_report
+from sklearn.linear_model import LogisticRegression 
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.naive_bayes import BernoulliNB
+from sklearn.linear_model import SGDClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn import metrics
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.pipeline import make_pipeline
+import re 
+import string
+
+data = pd.read_csv(r"C:\Users\KIIT\Desktop\mini project\fake reviews dataset.csv")
+print(data.shape)
+data.head()
+
+print(data['category'].unique())
+data['label_num'] = data.category.map({
+    'Home_and_Kitchen_5' : 0,
+    'Sports_and_Outdoors_5' : 1,
+    'Electronics_5' : 2,
+    'Movies_and_TV_5' : 3,
+    'Tools_and_Home_Improvement_5' : 4,
+    'Pet_Supplies_5' : 5,
+    'Kindle_Store_5' : 6,
+    'Books_5' : 7,
+    'Toys_and_Games_5' : 8,
+    'Clothing_Shoes_and_Jewelry_5' : 9
+})
+data.head()
+print(data[data['label_num'].isna()])                                                  # Display rows with NaN in 'label_num'
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(
+    data.text_,
+    data.label_num,
+    test_size=0.2, #using 20% of the data as a test dataset
+    random_state=19038,
+    stratify=data.label_num
+)
+
+print(X_train.shape)
+print(X_test.shape)
+(32345,)
+(8087,)
+vector = TfidfVectorizer()
+
+X_train_vector = vector.fit_transform(X_train)
+X_test_vector = vector.transform(X_test)
+model = SGDClassifier(max_iter=45000)
+model.fit(X_train_vector, y_train)
+
+lr_prediction = model.predict(X_test_vector)
+print("Lr accuracy is = ", (metrics.accuracy_score(lr_prediction, y_test))*100)
+
+#Logistic regression : 79.21 
+#Multinomial naive bayes : 76.9
+#Stochastic gradient descent : 79.42
+#RandomForestClassifier : 71.97 (after 2m 16.8s)
+#Bernouli Naive Bayes : 75.46
