@@ -64,3 +64,18 @@ print("Lr accuracy is = ", (metrics.accuracy_score(lr_prediction, y_test))*100)
 #Stochastic gradient descent : 79.42
 #RandomForestClassifier : 71.97 (after 2m 16.8s)
 #Bernouli Naive Bayes : 75.46
+
+
+
+conf_matrix = metrics.confusion_matrix(y_test, lr_prediction)
+print("Confusion Matrix:")
+print(conf_matrix)
+
+# Plotting the confusion matrix
+plt.figure(figsize=(10, 7))
+sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=np.unique(y_test), yticklabels=np.unique(y_test))
+plt.ylabel('Actual')
+plt.xlabel('Predicted')
+plt.title('Confusion Matrix')
+plt.show()
+
