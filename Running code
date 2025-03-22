@@ -2,9 +2,14 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+import nltk
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report
+from sklearn.model_selection import cross_val_score
 from sklearn.linear_model import LogisticRegression 
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.naive_bayes import BernoulliNB
@@ -12,70 +17,117 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.pipeline import make_pipeline
+from sklearn.model_selection import GridSearchCV
 import re 
 import string
+
+nltk.download('stopwords') # removes common words
+nltk.download('wordnet') # used to convert word into its original form
+nltk.download('punkt') # tokenization; splitting words in sentences
 
 data = pd.read_csv(r"C:\Users\KIIT\Desktop\mini project\fake reviews dataset.csv")
 print(data.shape)
 data.head()
 
-print(data['category'].unique())
-data['label_num'] = data.category.map({
-    'Home_and_Kitchen_5' : 0,
-    'Sports_and_Outdoors_5' : 1,
-    'Electronics_5' : 2,
-    'Movies_and_TV_5' : 3,
-    'Tools_and_Home_Improvement_5' : 4,
-    'Pet_Supplies_5' : 5,
-    'Kindle_Store_5' : 6,
-    'Books_5' : 7,
-    'Toys_and_Games_5' : 8,
-    'Clothing_Shoes_and_Jewelry_5' : 9
-})
+data['label'].value_counts()
+
+#preprocessing functions
+stop_words = set(stopwords.words('english'))
+stemmer = PorterStemmer()
+
+data['tokens'] = data['text_'].apply(lambda x: x.split())
+data['tokens_no_stopwords'] = data['tokens'].apply(lambda x: [word for word in x if word.lower() not in stop_words])
+
+data['tokens_stemmed'] = data['tokens_no_stopwords'].apply(lambda x: [stemmer.stem(word) for word in x])
+
+data['cleaned_text'] = data['tokens_stemmed'].apply(lambda x: ' '.join(x))
+
 data.head()
-print(data[data['label_num'].isna()])                                                  # Display rows with NaN in 'label_num'
+
+# Initialize the SentimentIntensityAnalyzer (VADER)
+
+sia = SentimentIntensityAnalyzer()
+
+def get_sentiment(text):
+    sentiment_score = sia.polarity_scores(text)['compound']
+    if sentiment_score > 0:
+        return 'Positive'
+    elif sentiment_score < 0:
+        return 'Negative'
+    else:
+        return 'Neutral'
+
+data['sentiment'] = data['cleaned_text'].apply(get_sentiment)
+
+# Count the number of occurrences of each sentiment type
+sentiment_counts = data['sentiment'].value_counts().reset_index()
+sentiment_counts.columns = ['Sentiment', 'Count']
+
+# Create a bar plot for overall sentiment distribution
+plt.figure(figsize=(5, 3))
+sns.barplot(x='Sentiment', y='Count', data=sentiment_counts, palette='viridis')
+plt.title('Overall Sentiment Distribution')
+plt.xlabel('Sentiment')
+plt.ylabel('Count')
+plt.show()
+
+# If 'label' column contains categories, you can group by it
+plt.figure(figsize=(5,3))
+sns.countplot(x='sentiment', hue='label', data=data, palette='Set2')
+plt.title('Sentiment vs Label')
+plt.xlabel('Sentiment')
+plt.ylabel('Count')
+plt.show()
 
 from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(
-    data.text_,
-    data.label_num,
-    test_size=0.2, #using 20% of the data as a test dataset
-    random_state=19038,
-    stratify=data.label_num
-)
+
+X = data['cleaned_text']  # Feature (text data)
+y = data['label']  # Target (label data)
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
 
 print(X_train.shape)
 print(X_test.shape)
-(32345,)
-(8087,)
-vector = TfidfVectorizer()
+
+vector = TfidfVectorizer(stop_words='english')
 
 X_train_vector = vector.fit_transform(X_train)
 X_test_vector = vector.transform(X_test)
-model = SGDClassifier(max_iter=45000)
+
+model = SGDClassifier(max_iter=45000, penalty='l2', alpha=0.0001)
+# cross validataion splits the data set in k parts and then finds the mean accuracy for the whole
+
+cv_scores = cross_val_score(model, X_train_vector, y_train, cv=10, scoring='accuracy') 
+print(f"Cross-validation scores for each fold: {cv_scores}")
+
+mean_accuracy = cv_scores.mean()
+print(f"Mean accuracy across all folds: {mean_accuracy * 100:.2f}%")
+std_accuracy = cv_scores.std()
+print(f"Standard deviation of accuracy across folds: {std_accuracy * 100:.2f}%")
+
 model.fit(X_train_vector, y_train)
+y_pred = model.predict(X_test_vector)
+print(classification_report(y_test, y_pred))
 
-lr_prediction = model.predict(X_test_vector)
-print("Lr accuracy is = ", (metrics.accuracy_score(lr_prediction, y_test))*100)
-
-#Logistic regression : 79.21 
+#Logistic regression : 79.21  
 #Multinomial naive bayes : 76.9
 #Stochastic gradient descent : 79.42
 #RandomForestClassifier : 71.97 (after 2m 16.8s)
 #Bernouli Naive Bayes : 75.46
+#after sentiment analysis, SDG = 85.74
 
+#after using regularisation, no difference was found, l2 was close to the initial accuracy but not greater than it. 
+#using grid search cv also did not help, it chose l2 @45k, alpha = 0.0001
 
-
-conf_matrix = metrics.confusion_matrix(y_test, lr_prediction)
+conf_matrix = metrics.confusion_matrix(y_test, y_pred)
 print("Confusion Matrix:")
 print(conf_matrix)
 
 # Plotting the confusion matrix
-plt.figure(figsize=(10, 7))
-sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=np.unique(y_test), yticklabels=np.unique(y_test))
+plt.figure(figsize=(5, 3))
+sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=np.unique(y_test), yticklabels=np.unique(y_pred))
 plt.ylabel('Actual')
 plt.xlabel('Predicted')
 plt.title('Confusion Matrix')
 plt.show()
-
