@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Amazon Review Analyzer</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <h1>Amazon Review Analyzer</h1>
+
+    <div class="status-box" id="status">
+      Checking for Amazon product page...
+    </div>
+
+    <button class="analyze-button" id="analyzeButton" disabled>
+      Analyze Reviews
+    </button>
+
+    <div class="stats-container" id="stats" style="display: none;">
+      <h2>Review Statistics</h2>
+      <div class="stats-line">
+        Total reviews analyzed: <span id="totalCount">0</span>
+      </div>
+      <div class="stats-line">
+        Real reviews: <span id="realCount" class="real-count">0</span>
+      </div>
+      <div class="stats-line">
+        Fake reviews: <span id="fakeCount" class="fake-count">0</span>
+      </div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

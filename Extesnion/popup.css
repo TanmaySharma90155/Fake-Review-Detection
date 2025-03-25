@@ -1,0 +1,52 @@
+/* popup.css */
+body {
+    width: 300px;
+    padding: 15px;
+    font-family: Arial, sans-serif;
+  }
+
+  h1 {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+
+  .status-box {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 4px;
+    background-color: #f1f1f1;
+  }
+
+  .analyze-button {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    background-color: #ff9900;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+  .analyze-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+
+  .stats-container {
+    margin-top: 15px;
+    font-size: 14px;
+  }
+
+  .stats-line {
+    margin-bottom: 5px;
+  }
+
+  .real-count {
+    color: green;
+  }
+
+  .fake-count {
+    color: red;
+  }
