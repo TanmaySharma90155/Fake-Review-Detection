@@ -26,7 +26,7 @@ import string
 nltk.download('stopwords') # removes common words
 nltk.download('wordnet') # used to convert word into its original form
 nltk.download('punkt') # tokenization; splitting words in sentences
-
+# reading the data
 data = pd.read_csv(r"C:\Users\KIIT\Desktop\mini project\fake reviews dataset.csv")
 print(data.shape)
 data.head()
@@ -82,26 +82,23 @@ plt.xlabel('Sentiment')
 plt.ylabel('Count')
 plt.show()
 
-from sklearn.model_selection import train_test_split
-
 X = data['cleaned_text']  # Feature (text data)
 y = data['label']  # Target (label data)
-
+#splitting data into 80% and 20%
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 
 print(X_train.shape)
 print(X_test.shape)
-
+#Using tf-idf vectorization
 vector = TfidfVectorizer(stop_words='english')
 
 X_train_vector = vector.fit_transform(X_train)
 X_test_vector = vector.transform(X_test)
 
-
+#using regularisation for minimum error
 model = SGDClassifier(max_iter=45000, penalty='l2', alpha=0.0001, loss='log_loss')
 # cross validataion splits the data set in k parts and then finds the mean accuracy for the whole
-
 cv_scores = cross_val_score(model, X_train_vector, y_train, cv=10, scoring='accuracy') 
 print(f"Cross-validation scores for each fold: {cv_scores}")
 
@@ -109,15 +106,16 @@ mean_accuracy = cv_scores.mean()
 print(f"Mean accuracy across all folds: {mean_accuracy * 100:.2f}%")
 std_accuracy = cv_scores.std()
 print(f"Standard deviation of accuracy across folds: {std_accuracy * 100:.2f}%")
-
 model.fit(X_train_vector, y_train)
 y_pred = model.predict(X_test_vector)
+
+#classification report
 print(classification_report(y_test, y_pred))
 
+#confusion matrix
 conf_matrix = metrics.confusion_matrix(y_test, y_pred)
 print("Confusion Matrix:")
 print(conf_matrix)
-
 # Plotting the confusion matrix
 plt.figure(figsize=(5, 3))
 sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=np.unique(y_test), yticklabels=np.unique(y_pred))
@@ -126,7 +124,7 @@ plt.xlabel('Predicted')
 plt.title('Confusion Matrix')
 plt.show()
 
-
+#Saving the model
 os.makedirs('models', exist_ok=True)
 joblib.dump(model, 'models/sgd_model.pkl')
 joblib.dump(vector, 'models/tfidf_vectorizer.pkl')
