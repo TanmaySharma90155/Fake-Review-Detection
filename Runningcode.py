@@ -6,6 +6,8 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+import joblib
+import os
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report
@@ -63,6 +65,7 @@ data['sentiment'] = data['cleaned_text'].apply(get_sentiment)
 sentiment_counts = data['sentiment'].value_counts().reset_index()
 sentiment_counts.columns = ['Sentiment', 'Count']
 
+
 # Create a bar plot for overall sentiment distribution
 plt.figure(figsize=(5, 3))
 sns.barplot(x='Sentiment', y='Count', data=sentiment_counts, palette='viridis')
@@ -95,7 +98,8 @@ vector = TfidfVectorizer(stop_words='english')
 X_train_vector = vector.fit_transform(X_train)
 X_test_vector = vector.transform(X_test)
 
-model = SGDClassifier(max_iter=45000, penalty='l2', alpha=0.0001)
+
+model = SGDClassifier(max_iter=45000, penalty='l2', alpha=0.0001, loss='log_loss')
 # cross validataion splits the data set in k parts and then finds the mean accuracy for the whole
 
 cv_scores = cross_val_score(model, X_train_vector, y_train, cv=10, scoring='accuracy') 
@@ -110,16 +114,6 @@ model.fit(X_train_vector, y_train)
 y_pred = model.predict(X_test_vector)
 print(classification_report(y_test, y_pred))
 
-#Logistic regression : 79.21  
-#Multinomial naive bayes : 76.9
-#Stochastic gradient descent : 79.42
-#RandomForestClassifier : 71.97 (after 2m 16.8s)
-#Bernouli Naive Bayes : 75.46
-#after sentiment analysis, SDG = 85.74
-
-#after using regularisation, no difference was found, l2 was close to the initial accuracy but not greater than it. 
-#using grid search cv also did not help, it chose l2 @45k, alpha = 0.0001
-
 conf_matrix = metrics.confusion_matrix(y_test, y_pred)
 print("Confusion Matrix:")
 print(conf_matrix)
@@ -131,3 +125,9 @@ plt.ylabel('Actual')
 plt.xlabel('Predicted')
 plt.title('Confusion Matrix')
 plt.show()
+
+
+os.makedirs('models', exist_ok=True)
+joblib.dump(model, 'models/sgd_model.pkl')
+joblib.dump(vector, 'models/tfidf_vectorizer.pkl')
+print("Model and vectorizer saved to 'models' directory.")
