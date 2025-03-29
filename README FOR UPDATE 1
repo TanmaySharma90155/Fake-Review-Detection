@@ -1,5 +1,0 @@
-Dear Creators/Collaborators
-
-In this update, we have applied sentiment analysis, which has increased accuracy to 85.7% 
-This notebook has 2 cells which provides the accuracy, 1st one uses cross validation.
-Try different vectorization techniques and models on the code to increase accurace
