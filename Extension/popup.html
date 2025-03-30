@@ -6,8 +6,21 @@
 </head>
 <body>
     <h1>Fake Review Detector</h1>
-    <textarea id="reviewText" placeholder="Paste review here..." rows="5" cols="30"></textarea>
-    <button id="predictButton">Check Review</button>
+
+    <div class="textarea-wrapper">
+        <textarea id="reviewText" placeholder="Enter your review here..." rows="5" cols="30"></textarea>
+    </div>
+        
+    <!-- original <button id="predictButton">Check Review</button>-->
+
+    <div class="scene" id="predictButton">
+        <div class="cube">
+        <span class="side top">Review</span>
+        <span class="side front">Check</span>
+        </div>
+    </div>
+
+
     <div id="result"></div>
     <script src="popup.js"></script>
 </body>
