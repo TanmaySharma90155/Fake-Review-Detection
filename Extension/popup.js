@@ -3,7 +3,7 @@ document.getElementById('predictButton').addEventListener('click', async () => {
     const resultDiv = document.getElementById('result');
 
     if (!reviewText) {
-        resultDiv.innerText = "Please enter a review.";
+        resultDiv.innerText = "Please enter a review!";
         return;
     }
 
@@ -23,7 +23,7 @@ document.getElementById('predictButton').addEventListener('click', async () => {
         if (data.error) {
             resultDiv.innerText = `Error: ${data.error}`;
         } else {
-            resultDiv.innerText = `Result: ${data.result} (${data.probability_real.toFixed(2)}% real)\nSentiment: ${data.sentiment}`;
+            resultDiv.innerText = `Result: ${data.result} \nPercentage: ${data.probability_real.toFixed(2)}% Real \nSentiment: ${data.sentiment}`;
         }
     } catch (error) {
         resultDiv.innerText = `Error: Could not connect to server.`;
