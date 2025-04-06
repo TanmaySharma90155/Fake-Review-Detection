@@ -20,7 +20,7 @@ nltk.download('punkt')
 nltk.download('vader_lexicon')
 
 # Dataset path
-DATA_PATH = r"E:/coding/fake-review/fake_reviews.csv"
+DATA_PATH = r"data_set/fake_reviews.csv"  # Add your own path for data set for training the model locally
 
 # Preprocessing functions
 stop_words = set(stopwords.words('english'))
