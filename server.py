@@ -16,8 +16,8 @@ CORS(app)  # Enable CORS for Chrome extension
 
 # Load the model and vectorizer
 try:
-    model = joblib.load('models/sgd_model.pkl')
-    vectorizer = joblib.load('models/tfidf_vectorizer.pkl')
+    model = joblib.load('Extension/models/sgd_model.pkl') # Add your own sgd_model.pkl model path for running the server in local
+    vectorizer = joblib.load('Extension/models/tfidf_vectorizer.pkl') # Add your own tfidf_vectorizer.pkl model path for running the server in local
 except Exception as e:
     print(f"Error loading model or vectorizer: {str(e)}")
     raise
@@ -53,7 +53,7 @@ def predict():
         prediction = model.predict(text_vector)[0]
         probability = model.predict_proba(text_vector)[0]
         prob_real = probability[1]  # Probability of being real
-        # If probability of being real > 50%, classify as real; otherwise, fake
+        # If probability of being real > 50%, classify as REAL; otherwise, FAKE
         result = "Real" if prob_real > 0.5 else "Fake"
         # Get sentiment (for informational purposes)
         sentiment_score = sia.polarity_scores(cleaned_text)['compound']
