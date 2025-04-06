@@ -1,6 +1,6 @@
 body {
     width: 360px;
-    height: 350px;
+    height: 360px;
     padding: 10px;
     font-family: Arial, sans-serif;
     background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
@@ -51,7 +51,7 @@ h1:hover::before {
 
 textarea {
     width: 100%;
-    height: 110px;
+    height: 120px;
     border-radius: 5px;
     padding: 12px;
     box-sizing: border-box;
@@ -84,7 +84,7 @@ textarea::placeholder {
 }
 
 #result {
-    margin-top: 10px;
+    margin-top: 15px;
     font-weight: bold;
     text-align: center;
     background: linear-gradient(to right, #ff758c, #ff7eb3);
