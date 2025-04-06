@@ -1,18 +1,26 @@
 {
-    "manifest_version": 3,
-    "name": "Fake Review Detector",
-    "version": "1.0",
-    "description": "Detects fake reviews on sites.",
-    "permissions": [
-      "activeTab",
-      "http://127.0.0.1:5000/*"
-       
-    ],
-    "icons": {
-    "612": "favicon16.png"
-    },
-    "action": {
-      "default_popup": "popup.html",
-      "default_icon": "favicon16.png"
+  "manifest_version": 3,
+  "name": "Fake Review Detector",
+  "version": "1.0",
+  "description": "Browser extension for real-time analysis of online product reviews using AI-powered classification to identify potentially computer-generated reviews.",
+  
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png",
+      "256": "icons/icon256.png",
+      "612": "icons/icon612.png"
     }
-  }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png",
+    "256": "icons/icon256.png",
+    "612": "icons/icon612.png"
+  },
+  "permissions": ["activeTab", "scripting"],
+  "host_permissions": ["<all_urls>"]
+}
