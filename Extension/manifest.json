@@ -1,26 +1,31 @@
 {
   "manifest_version": 3,
-  "name": "Fake Review Detector",
+  "name": "Review Authenticity Analyzer",
   "version": "1.0",
-  "description": "Browser extension for real-time analysis of online product reviews using AI-powered classification to identify potentially computer-generated reviews.",
-  
+  "description": "Professional tool for analyzing the authenticity of online product reviews",
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "http://127.0.0.1:5000/*"
+  ],
   "action": {
     "default_popup": "popup.html",
-    "default_icon": {
-      "16": "icons/icon16.png",
-      "48": "icons/icon48.png",
-      "128": "icons/icon128.png",
-      "256": "icons/icon256.png",
-      "612": "icons/icon612.png"
+    "default_icon" : {"267" : "icon.png"}
+  },
+  "icon": {
+
+    "267" : "icon.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_end"
     }
-  },
-  "icons": {
-    "16": "icons/icon16.png",
-    "48": "icons/icon48.png",
-    "128": "icons/icon128.png",
-    "256": "icons/icon256.png",
-    "612": "icons/icon612.png"
-  },
-  "permissions": ["activeTab", "scripting"],
-  "host_permissions": ["<all_urls>"]
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
 }
