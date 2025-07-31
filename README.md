@@ -20,8 +20,8 @@ This project aims to build an automated fake review detection system using machi
 ## Technologies Used
 
 - **Python**  
-- **Scikit-learn / XGBoost / Random Forest** – Classification models  
-- **NLTK / spaCy / TextBlob** – NLP processing  
+- **Scikit-learn** – Classification models  
+- **NLTK** – NLP processing  
 - **Pandas / NumPy** – Data manipulation  
 - **Matplotlib / Seaborn** – Data visualization  
 - **Jupyter Notebook** – Experimentation
