@@ -1,14 +1,29 @@
-# Fake-Review-Detection
+# Fake Review Detection using Machine Learning
 
-Fake reviews have become a significant issue in online platforms, influencing customer decisions and business reputations. The authenticity
-of reviews plays a crucial role in ensuring a fair marketplace. Various
-factors, such as review text, user behavior, and metadata, can indicate
-whether a review is genuine or fraudulent. Traditionally, manual methods
-and rule-based approaches were used to detect fake reviews, but they are
-inefficient and prone to inaccuracies. With advancements in artificial intelligence and machine learning, automated fake review detection models are now replacing manual efforts. These models leverage historical data to classify reviews as genuine or
-fake with high accuracy. In this report, we discuss various machine
-learning techniques used for fake review detection, compare their
-performance, and analyze their effectiveness in real-world scenarios. Our
-goal is to determine the most efficient model for accurately identifying
-fake reviews and mitigating their impact on online platforms. Keywords: Fake Review Detection, Machine Learning, NLP, Sentiment
-Analysis, Classification Models, Supervised Learning
+## Project Overview
+
+Fake reviews have become a major challenge on online platforms, influencing customer decisions and damaging brand reputations. Ensuring the authenticity of reviews is essential for maintaining a fair and trustworthy digital marketplace.
+
+This project aims to build an automated fake review detection system using machine learning techniques. By analyzing review text, user behavior, and metadata, we classify reviews as **genuine** or **fake** with high accuracy.
+
+---
+
+## Objectives
+
+- Identify patterns and features that differentiate fake and genuine reviews
+- Apply multiple machine learning models for classification
+- Evaluate model performance and compare results
+- Improve review authenticity detection through NLP and sentiment analysis
+
+---
+
+## Technologies Used
+
+- **Python**  
+- **Scikit-learn / XGBoost / Random Forest** – Classification models  
+- **NLTK / spaCy / TextBlob** – NLP processing  
+- **Pandas / NumPy** – Data manipulation  
+- **Matplotlib / Seaborn** – Data visualization  
+- **Jupyter Notebook** – Experimentation
+
+---
